@@ -1,0 +1,385 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="https://fonts.cdnfonts.com/css/satoshi" rel="stylesheet" />
+    <title>Welcome</title>
+    <style type="text/css">
+      * {
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      a {
+        text-decoration: none;
+        color: #35977f !important;
+        height: fit-content !important;
+      }
+
+      p {
+        color: #707070;
+      }
+
+      .body {
+        width: 680px !important;
+        margin: 0 auto !important;
+        padding: 51.67px 48px 75.35px !important;
+        font-family: "Satoshi", sans-serif;
+        background-color: white;
+      }
+
+      .logo {
+        width: 88px !important;
+        height: auto;
+      }
+
+      .main_div {
+        border: 1px solid #0e664f;
+        margin: 46.76px auto 0 !important;
+        width: 520px;
+        max-width: 520px;
+        border-radius: 24px 24px 0 0 !important;
+        background-color: #0e664f;
+      }
+
+      .top_div {
+        border-bottom: 1px solid #0e664f;
+        border-radius: 23px 23px 48px 48px !important;
+        padding-bottom: 75.35px !important;
+        z-index: 80;
+        background-color: white;
+      }
+
+      .text_div {
+        padding: 0 24px !important;
+      }
+
+      .top_div img {
+        width: 97% !important;
+        margin: 24px auto !important;
+      }
+
+      .user_name {
+        line-height: 24.04px !important;
+        font-size: 21.03px !important;
+        font-weight: 600;
+        color: #1e293b;
+        margin-bottom: 32px !important;
+      }
+
+      .content_text,
+      .content_text_span {
+        font-size: 14.5px !important;
+        line-height: 23px !important;
+      }
+
+      .content_text {
+        color: #5c5c80;
+        font-weight: 500;
+        margin-bottom: 16px !important;
+      }
+
+      .content_text_span {
+        font-weight: 600;
+        color: #35977f;
+      }
+
+      .content_text_span_black {
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      .content_link {
+        border-bottom: 2px solid #35977f;
+        font-weight: 700;
+      }
+
+      .content_email {
+        font-weight: 700;
+      }
+
+      .regard_div {
+        margin: 31px 0 52px !important;
+        color: #5C5C80;
+      }
+
+      .regard_text {
+        font-size: 17px !important;
+        line-height: 23px !important;
+        margin: 0 !important;
+        font-weight: 500;
+      }
+
+      .regard_text_bold {
+        font-size: 16px !important;
+        line-height: 22.4px !important;
+        font-weight: 700;
+      }
+
+      .regard_text,
+      .regard_text_bold {
+        margin-bottom: 8px !important;
+      }
+
+      .button_sect {
+        width: fit-content !important;
+        margin: 0 auto !important;
+      }
+
+      .button_sect button {
+        background-color: transparent;
+        padding: 8.59px 15.75px !important;
+        border: 1px solid #35977f;
+        border-radius: 5.73px;
+        margin: 0 5.89px !important;
+        height: 38.65px !important;
+      }
+
+      .button_sect button a {
+        display: block !important;
+        height: fit-content !important;
+        margin: 0 !important;
+      }
+
+      .button_sect img {
+        width: 108.63px !important;
+        height: 21.47px !important;
+        margin-top: 0 !important;
+      }
+
+      .bottom_div {
+        background-color: #0e664f;
+        padding: 50px 0 !important;
+        z-index: 10;
+      }
+
+      .bottom_center {
+        text-align: center;
+      }
+
+      .bottom_imgs {
+        margin-bottom: 28.31px !important;
+      }
+
+      .social_media_img {
+        width: 26.74px !important;
+        height: auto;
+      }
+
+      .bottom_text {
+        font-size: 17px !important;
+        color: #edeff5;
+        margin: 0 !important;
+        line-height: 25px;
+        font-weight: 500;
+      }
+
+      @media (max-width: 769px) {
+        .body {
+          width: unset !important;
+          padding: 51.67px 24px !important;
+        }
+      }
+
+      @media (max-width: 540px) {
+        .logo {
+          width: 54px !important;
+        }
+
+        .text_div {
+          padding: 0 16px !important;
+        }
+
+        .main_div {
+          width: unset !important;
+        }
+
+        .top_div {
+          padding-bottom: 48px !important;
+        }
+
+        .user_name {
+          font-size: 18px !important;
+        }
+
+        .bottom_imgs {
+          margin-bottom: 22.31px !important;
+        }
+
+        .social_media_img {
+          width: 22.74px !important;
+        }
+
+        .bottom_text {
+          font-size: 15px !important;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .body {
+          padding: 51.67px 12px !important;
+        }
+
+        .top_div {
+          padding-bottom: 24px !important;
+        }
+
+        .text_div {
+          padding: 0 12px !important;
+        }
+
+        .user_name {
+          font-size: 16px !important;
+        }
+
+        .button_sect button {
+          margin: 0 3.89px !important;
+        }
+
+        .button_sect img {
+          width: 30vw !important;
+          height: auto !important;
+          margin-top: 0 !important;
+        }
+
+        .regard_text {
+          font-size: 16px !important;
+        }
+
+        .regard_text_bold {
+          font-size: 15px !important;
+        }
+
+        .regard_text,
+        .regard_text_bold {
+          margin-bottom: 4px !important;
+        }
+      }
+    </style>
+  </head>
+  <body class="body">
+    <header>
+      <img
+        src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1708955143/email-images/Transactly-logo_vlvijy.png"
+        alt=""
+        class="logo"
+      />
+    </header>
+
+    <div class="main_div">
+      <section class="top_div">
+        <img
+          src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1708955149/email-images/welcome_g4fkvc.png"
+          alt=""
+        />
+        <div class="text_div">
+          <p class="user_name">Hi {{name}},</p>
+          <p class="content_text">
+            You made it! It’s nice to finally meet you.
+          </p>
+          <p class="content_text">
+            Here at Transactly, we are all about simplifying wealth for Africans
+            Globally.
+          </p>
+          <p class="content_text">
+            Everyone should have access to the tools they need to achieve
+            financial freedom, and with Transactly, you can Save, Invest, and Grow.
+          </p>
+          <p class="content_text">
+            Expect more newsletters and emails from me regarding how to get the
+            most out of the
+            <a href="https://Transactly.co" class="content_text_span">platform</a>
+            and your investments...
+          </p>
+          <p class="content_text">
+            Everyone should have access to the tools they need to achieve
+            financial freedom, and with Transactly, you can Save, Invest, and Grow.
+          </p>
+          <p class="content_text">
+            Expect more newsletters and emails from me regarding how to get the
+            most out of the platform and your investments...
+          </p>
+          <p class="content_text">
+            And also, endeavor to join Transactly Trybe, our vibrant online community
+            where professionals converge to amplify wealth-building strategies
+            and elevate personal finance expertise.
+          </p>
+          <p class="content_text">
+            If you need clarifications or assistance, email us via
+            <a href="mailto:hello@Transactly.co" class="content_link"
+            >Hello@Transactly.co</a
+          >, and we'll attend to
+          </p>
+
+          <div class="regard_div">
+            <p class="regard_text">With Love💚,</p>
+            <p class="regard_text_bold">Bisi From Transactly</p>
+
+          </div>
+        </div>
+
+        <div class="button_sect">
+          <button>
+            <a
+              href="https://apps.apple.com/ng/app/Transactly-global-real-estate/id6463791690"
+              ><img
+                src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1709648417/email-images/Apple_Download_ukptb6.png"
+                alt=""
+            /></a>
+          </button>
+          <button>
+            <a
+              href="https://play.google.com/store/apps/details?id=org.Transactly.Transactly"
+              ><img
+                src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1709648417/email-images/Google_download_bfzync.png"
+                alt=""
+            /></a>
+          </button>
+        </div>
+      </section>
+      <section class="bottom_div">
+        <div class="bottom_center bottom_imgs">
+          <a href="https://www.facebook.com/Transactlyhq?mibextid=ZbWKwL">
+            <img
+              src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1708955143/email-images/facebook_umrhet.png"
+              alt=""
+              class="social_media_img"
+            />
+          </a>
+
+          <a href="https://www.linkedin.com/company/Transactly/">
+            <img
+              src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1708955143/email-images/linkedin_qnmlw5.png"
+              alt=""
+              class="social_media_img"
+            />
+          </a>
+          <a href="https://www.instagram.com/Transactlyhq?igsh=OXNybWh4NGZ4NzUy">
+            <img
+              src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1708955143/email-images/instagram_fjrfuz.png"
+              alt=""
+              class="social_media_img"
+            />
+          </a>
+          <a href="https://x.com/TransactlyHQ?t=ioIp1e5WAlx6RNgZaTILfQ&s=09">
+            <img
+              src="https://res.cloudinary.com/dy2otfgkb/image/upload/v1708955148/email-images/x_gemooy.png"
+              alt=""
+              class="social_media_img"
+            />
+          </a>
+        </div>
+        <div class="bottom_center">
+          <p class="bottom_text">23 Hughes Avenue, Alagomeji-Yaba, Lagos</p>
+          <p class="bottom_text">© 2024 Transactly INC</p>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

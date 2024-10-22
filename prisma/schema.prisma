@@ -1,0 +1,156 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+}
+
+model User {
+  id                        String         @id @unique @default(uuid())
+  email                     String         @unique
+  fullname                  String
+  username                  String
+  password                  String
+  image                     String?        @default("")
+  bio                       String?
+  location                  String?
+  country                   String?
+  dob                       DateTime?
+  accepted_terms_conditions Boolean?
+  is_disabled               Boolean?
+  notification_count        Decimal        @default(0)
+  verified_email            Boolean?       @default(false)
+  verified_coach            Boolean?       @default(false)
+  verified_email_at         DateTime?
+  verified_coach_at         DateTime?
+  is_deleted                Boolean?
+  is_deleted_at             DateTime?
+  first_login               Boolean?
+  last_login                DateTime?
+  reset_password_token      String?
+  reset_password_expires    DateTime?
+  login_count               Int?
+  otps                      Otp[]
+  createdAt                 DateTime       @default(now())
+  updatedAt                 DateTime       @updatedAt
+  sentTransactions          Transaction[]  @relation("Sender")
+  receivedTransactions      Transaction[]  @relation("Receiver")
+  payments                  Payment[]
+  notifications             Notification[]
+  wallets                   Wallet[]
+  trsnsactionrefs           TransactionRefs[]
+
+  @@index([username, email])
+  @@map(name: "users")
+}
+
+model Otp {
+  id         String    @id @unique @default(uuid())
+  otp        Int
+  userId     String?   @unique
+  admin_id   String?   @unique
+  token      Json?
+  expires_in DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  user       User?     @relation(fields: [userId], references: [id])
+
+  @@map(name: "otps")
+}
+
+model Payment {
+  id            String        @id @unique @default(uuid())
+  name          String
+  amount Decimal       @default(0)
+  isActive      Boolean       @default(false)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  transactions  Transaction[] @relation("PaymentType")
+
+  @@map("payments")
+}
+
+model Transaction {
+  id              String  @id @unique @default(uuid())
+  currency        String?
+  userCurrency    String?
+  amount          Decimal @default(0)
+  senderId        String
+  sender          User    @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId      String
+  receiver        User    @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  paymentId       String
+  payment         Payment @relation("PaymentType", fields: [paymentId], references: [id], onDelete: Cascade)
+  remarks         String
+  isPaid          Boolean @default(false)
+
+  @@map("transactions")
+}
+
+model Notification {
+  id                   String  @id @unique @default(uuid())
+  title                String
+  userId               String? @unique
+  notificationCategory String?
+  content              String?
+  actionLink           String?
+  status               String  @default("unread")
+  user                 User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "notifications")
+}
+
+model Wallet {
+  id                      String    @id @unique @default(uuid())
+  userId                  String?   @unique
+  user                    User?     @relation(fields: [userId], references: [id])
+  userData                Json?
+  currency                String?
+  walletAccountNumber     String   @unique
+  creditTransactions      Decimal?
+  debitTransactions       Decimal?
+  totalCreditTransactions Decimal?
+  totalDebitTransactions  Decimal?
+  status                  Status?
+  balance                 Decimal?
+  balance_before          Decimal?
+  balance_after           Decimal?
+  last_debit_amount       Decimal?
+  last_deposit_amount     Decimal?
+  last_debit_date         DateTime?
+  last_deposit_date       DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map(name: "wallets")
+}
+
+model TransactionRefs {
+  id         String    @id @unique @default(uuid())
+  transactionHash     String?
+  amount     Decimal?
+  userId     String?   @unique
+  user       User?     @relation(fields: [userId], references: [id])
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@map(name: "transactionrefs")
+}
