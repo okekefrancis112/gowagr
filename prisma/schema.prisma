@@ -44,6 +44,7 @@ model User {
   reset_password_token      String?
   reset_password_expires    DateTime?
   login_count               Int?
+  totalAmountFunded Decimal?
   otps                      Otp[]
   createdAt                 DateTime       @default(now())
   updatedAt                 DateTime       @updatedAt
@@ -87,14 +88,13 @@ model Payment {
 model Transaction {
   id              String  @id @unique @default(uuid())
   currency        String?
-  userCurrency    String?
   amount          Decimal @default(0)
-  senderId        String
-  sender          User    @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
-  receiverId      String
-  receiver        User    @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
-  paymentId       String
-  payment         Payment @relation("PaymentType", fields: [paymentId], references: [id], onDelete: Cascade)
+  senderId        String?
+  sender          User?    @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
+  receiverId      String?
+  receiver        User?    @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
+  paymentId       String?
+  payment         Payment? @relation("PaymentType", fields: [paymentId], references: [id], onDelete: Cascade)
   remarks         String
   isPaid          Boolean @default(false)
 

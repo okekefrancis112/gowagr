@@ -7,7 +7,7 @@ import {
   } from '../config';
   import adminUserRepository from '../repositories/adminUser.repository';
   import permissionRepository from '../repositories/permission.repository';
-  import roleRepository from '../repositories/role.repository';
+  import roleRepository from '../repositories/transactionRef.repository';
 
   // Permissions
   const permissions = [

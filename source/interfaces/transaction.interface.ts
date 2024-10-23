@@ -4,8 +4,6 @@ export interface ITransaction {
     id: string;
     // Field for Transaction name
     currency: string;
-    userCurrency: string;
-    usdExchangeRate?: string;
     amount: number;
     senderId?: string;
     receiverId?: string;

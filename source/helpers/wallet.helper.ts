@@ -3,9 +3,10 @@ import { IAction } from "../interfaces/webhook.interface";
 import transactionRepository from "../repositories/transaction.repository";
 import userRepository from "../repositories/user.repository";
 import walletRepository from "../repositories/wallet.repository";
+import transactionRefRepository from "../repositories/transactionRef.repository";
 
 interface IWalletCredit {
-    userId: String;
+    userId: string;
     amount: number;
     currency?: string;
     userCurrency?: string;
@@ -13,8 +14,9 @@ interface IWalletCredit {
     receiverId?: string;
     paymentId?: string;
     remarks?: string;
+    transactionHash?: string;
     isPaid?: boolean;
-    name?: string;
+    reference?: string;
     isActive?: boolean;
     user?: string;
 }
@@ -26,6 +28,8 @@ export const creditWallet = async ({ data, session }: { data: IWalletCredit; ses
             userId,
             amount,
             currency,
+            transactionHash,
+            reference,
             userCurrency,
             senderId,
             receiverId,
@@ -51,92 +55,34 @@ export const creditWallet = async ({ data, session }: { data: IWalletCredit; ses
             userId,
             amount: Number(amount),
             balance: wallet?.balance,
-            session,
         });
 
         // Save Transaction Ref
-        const transactionRef = await transaction_refRepository.create({
+        const transactionRef = await transactionRefRepository.create({
+            transactionHash,
+            userId,
             amount,
-            transaction_hash,
-            user_id,
-            session,
         });
 
         // Save Transaction
         const transaction = await transactionRepository.create({
             amount,
-            source_amount,
-            destination_amount,
-            source_currency,
-            destination_currency,
-            transaction_hash,
-            transaction_medium: ITransactionMedium.WALLET,
-            keble_transaction_type: IKebleTransactionType.WALLET_FUNDING,
-            user_id: new Types.ObjectId(user_id),
-            transaction_ref: transactionRef[0]._id,
-            wallet: {
-                wallet_id: wallet._id,
-                wallet_balance_before: wallet.balance,
-                wallet_balance_after:
-                    payment_gateway && payment_gateway !== IPaymentGateway.DIASPORA_TRANSFER
-                        ? Number(wallet.balance) + Number(amount)
-                        : Number(wallet.balance),
-                // Number(wallet.balance) + Number(amount),
-            },
-            payment_reference: reference,
+            transactionHash,
+            userId,
+            transactionRef: transactionRef.id,
+            paymentReference: reference,
             transaction_type: ITransactionType.CREDIT,
-            payment_gateway,
             description,
-            sender,
-            recipient,
             note,
             currency,
-            exchange_rate_value,
-            exchange_rate_currency,
-            ip_address,
-            transaction_status:
-                payment_gateway && payment_gateway !== IPaymentGateway.DIASPORA_TRANSFER
-                    ? ITransactionStatus.SUCCESSFUL
-                    : ITransactionStatus.PENDING,
-            meta_data: data ? data.data : null,
-            session,
-            transaction_to,
+            transaction_status: ITransactionStatus.SUCCESSFUL,
             wallet_transaction_type,
-            charge: charge || 0,
         });
 
-        // Save Webhook
-        const webhook = await webhookRepository.create({
-            platform: payment_gateway,
-            action: IAction.WEBHOOK_SAVED,
-            webhook_id: String(webhook_id),
-            data,
-            session,
-        });
-
-        const update_user = await userRepository.atomicUpdate(
-            { _id: user_id },
-            { total_amount_funded: amount },
-            session
+        const updateUser = await userRepository.atomicUpdate(
+            { id: userId },
+            { totalAmountFunded: amount },
         );
-
-        const savingsTracker = await SavingsTrackerHelper({
-            user_id: String(user_id),
-            amount: amount,
-            is_debit: false,
-            credits_array: {
-                amount: amount,
-                date: new Date(),
-                transaction_id: new Types.ObjectId(transaction._id),
-            },
-            all_transactions: {
-                amount: amount,
-                date: new Date(),
-                transaction_id: new Types.ObjectId(transaction._id),
-                is_debit: false,
-            },
-            session,
-        });
 
         return {
             success: true,
@@ -145,9 +91,7 @@ export const creditWallet = async ({ data, session }: { data: IWalletCredit; ses
                 updateBalance,
                 transactionRef,
                 transaction,
-                webhook,
-                update_user,
-                savingsTracker,
+                updateUser,
             },
         };
     } catch (error: any) {
@@ -159,11 +103,11 @@ export const creditWallet = async ({ data, session }: { data: IWalletCredit; ses
 };
 
 interface IWalletDebit {
-    user_id: Types.ObjectId;
+    userId: string;
     amount: number;
     source_amount?: number;
     destination_amount?: number;
-    transaction_hash: string;
+    transactionHash: string;
     reference: string;
     data?: any;
     payment_gateway: IPaymentGateway;
@@ -185,11 +129,11 @@ interface IWalletDebit {
 export const debitWallet = async ({ data, session }: { data: IWalletDebit; session: any }) => {
     try {
         const {
-            user_id,
+            userId,
             amount,
             source_amount,
             destination_amount,
-            transaction_hash,
+            transactionHash,
             reference,
             payment_gateway,
             description,
@@ -207,7 +151,9 @@ export const debitWallet = async ({ data, session }: { data: IWalletDebit; sessi
         } = data;
 
         // Check if Wallet exist
-        const wallet = await walletRepository.getByUserId({ user_id });
+        const wallet = await walletRepository.getOne({
+            id: userId
+        });
         if (!wallet) {
             return {
                 success: false,
@@ -222,18 +168,16 @@ export const debitWallet = async ({ data, session }: { data: IWalletDebit; sessi
             };
         }
         const updateBalance = await walletRepository.processWalletDebitUpdates({
-            user_id,
+            userId,
             amount: amount,
             balance: wallet?.balance,
-            session,
         });
 
         // Save Transaction Ref
-        const transactionRef = await transaction_refRepository.create({
+        const transactionRef = await transactionRefRepository.create({
             amount,
-            transaction_hash,
-            user_id,
-            session,
+            transactionHash,
+            userId,
         });
 
         // Save Transaction
@@ -273,22 +217,6 @@ export const debitWallet = async ({ data, session }: { data: IWalletDebit; sessi
             source_amount,
             destination_amount,
             createdAt: createdAt && createdAt,
-            session,
-        });
-
-        await SavingsTrackerHelper({
-            user_id: String(user_id),
-            amount: -amount,
-            is_debit: true,
-            is_debit_category: transaction_to,
-            last_debit_date: new Date(),
-            all_transactions: {
-                amount: amount,
-                date: new Date(),
-                transaction_id: new Types.ObjectId(transaction._id),
-                is_debit_category: transaction_to,
-                is_debit: true,
-            },
             session,
         });
 

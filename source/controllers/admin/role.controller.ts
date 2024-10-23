@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { ExpressRequest } from '../../server';
-import roleRepository from '../../repositories/role.repository';
+import roleRepository from '../../repositories/transactionRef.repository';
 import { throwIfAdminUserUndefined } from '../../util';
 import ResponseHandler from '../../util/response-handler';
 import { HTTP_CODES } from '../../constants/app_defaults.constant';

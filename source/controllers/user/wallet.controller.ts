@@ -319,7 +319,7 @@ export async function verifyWalletTransfer(
 
       const receiver_id = receiverWallet?.userId;
       const receiverUser = await userRepository.getOne({
-         whre:  {_id: receiver_id},
+         where:  {id: receiver_id},
       });
 
       if (!receiverUser) {
@@ -334,8 +334,8 @@ export async function verifyWalletTransfer(
           amount: amount,
           user_id: new Types.ObjectId(sender_wallet?.user_id),
           sender: new Types.ObjectId(sender_wallet?.user_id),
-          recipient: wallet?.user_id,
-          currency: ICurrency.USD,
+          recipient: wallet?.userId,
+          currency: IC,
           note: note,
           payment_gateway: IPaymentGateway.WALLET,
           reference,
@@ -418,6 +418,70 @@ export async function verifyWalletTransfer(
           res,
           code: HTTP_CODES.OK,
           message: "Wallet Transfer successful",
+      });
+  } catch (error) {
+      return ResponseHandler.sendErrorResponse({
+          res,
+          code: HTTP_CODES.INTERNAL_SERVER_ERROR,
+          error: `${error}`,
+      });
+  }
+}
+
+export async function getUserWallet(
+  req: ExpressRequest,
+  res: Response
+): Promise<Response | void> {
+  try {
+      const user = throwIfUndefined(req.user, "req.user");
+
+      const wallet = await walletRepository.getOne({
+        where: {userId: user.id}
+      });
+
+      if (!wallet) {
+          return ResponseHandler.sendErrorResponse({
+              res,
+              code: HTTP_CODES.NOT_FOUND,
+              error: `Sorry, this wallet does not exist.`,
+          });
+      }
+
+      const getUser = await userRepository.getOne({
+          where: { id: user.id },
+          select:{
+            id: true,
+            email: true,
+            fullname: true,
+          }
+      });
+
+      if (!getUser) {
+          return ResponseHandler.sendErrorResponse({
+              res,
+              code: HTTP_CODES.NOT_FOUND,
+              error: "Wallet user does not exist",
+          });
+      }
+
+      const transactions = await transactionRepository.findPaginatedWalletTransactions(
+        req,
+        getUser.id
+      );
+
+      return ResponseHandler.sendSuccessResponse({
+          res,
+          code: HTTP_CODES.OK,
+          message: "User wallet details fetched",
+          data: {
+              transactions,
+              userInfo: {
+                  name: `${getUser?.fullname}`,
+                  image: getUser?.image ? getUser?.image : "",
+              },
+              balance: wallet.balance,
+              walletId: wallet.walletAccountNumber,
+          },
       });
   } catch (error) {
       return ResponseHandler.sendErrorResponse({

@@ -19,8 +19,6 @@ export async function createTransaction(
 
     const {
         currency,
-        userCurrency,
-        usdExchangeRate,
         amount,
         receiverId,
         paymentId,
@@ -33,7 +31,6 @@ export async function createTransaction(
         await db.$transaction(async () => {
             const Transaction = await transactionRepository.create({
                 currency,
-                userCurrency,
                 amount,
                 senderId: String(user.id),
                 receiverId: String(receiverId),

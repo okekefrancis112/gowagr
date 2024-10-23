@@ -5,7 +5,7 @@ import bcryptjs from 'bcryptjs';
 import UtilFunctions, { throwIfAdminUserUndefined, slugify } from '../../util';
 import ResponseHandler from '../../util/response-handler';
 import adminUserRepository from '../../repositories/adminUser.repository';
-import roleRepository from '../../repositories/role.repository';
+import roleRepository from '../../repositories/transactionRef.repository';
 import { HTTP_CODES } from '../../constants/app_defaults.constant';
 
 /***

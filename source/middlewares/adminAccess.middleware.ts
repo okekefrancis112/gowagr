@@ -7,7 +7,7 @@ import ResponseHandler from '../util/response-handler';
 
 // Import adminUserRepository and roleRepository for user and role operations
 import adminUserRepository from '../repositories/adminUser.repository';
-import roleRepository from '../repositories/role.repository';
+import roleRepository from '../repositories/transactionRef.repository';
 
 // Import throwIfAdminUserUndefined and HTTP_CODES from constants
 import { throwIfAdminUserUndefined } from '../util';

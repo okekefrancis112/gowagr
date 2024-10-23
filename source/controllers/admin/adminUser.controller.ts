@@ -4,7 +4,7 @@ import { ExpressRequest } from '../../server';
 import UtilFunctions, { generateInvitation, throwIfAdminUserUndefined } from '../../util';
 import ResponseHandler from '../../util/response-handler';
 import adminUserRepository from '../../repositories/adminUser.repository';
-import roleRepository from '../../repositories/role.repository';
+import roleRepository from '../../repositories/transactionRef.repository';
 import otpRepository from '../../repositories/otp.repository';
 import { ADMIN_INVITATION, APP_CONSTANTS } from '../../constants/app_defaults.constant';
 import { HTTP_CODES } from '../../constants/app_defaults.constant';
