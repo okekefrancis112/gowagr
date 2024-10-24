@@ -13,7 +13,7 @@ class TransactionRefRepository {
     amount?: number;
   }): Promise<ITransactionRefDocument> {
 
-    return await db.transactionRefs.create({
+    return await db.transactionRef.create({
       data: {
         transactionHash,
         userId,
@@ -26,7 +26,7 @@ class TransactionRefRepository {
   public async getOne(
     query: any
   ): Promise<ITransactionRefDocument | null> {
-    return db.transactionRefs.findUnique(query) as any;
+    return db.transactionRef.findUnique(query) as any;
   }
 
   // Function to get a user document by email
@@ -34,7 +34,7 @@ class TransactionRefRepository {
     // @returns {Promise<IUserDocument | null>} - A promise that resolves with a user document or null if not found
     public async get(query:any): Promise<ITransactionRefDocument | null> {
       // Query the User model for a document with the given email
-      return db.transactionRefs.findMany(query) as any;
+      return db.transactionRef.findMany(query) as any;
   }
 
   // Update TransactionRef by id
@@ -42,7 +42,7 @@ class TransactionRefRepository {
     query: any,
     record: any,
     ): Promise<ITransactionRefDocument | null> {
-    return await db.transactionRefs.update(
+    return await db.transactionRef.update(
       {
           where: query,
           data: record,
@@ -52,7 +52,7 @@ class TransactionRefRepository {
 
   // Delete TransactionRef by query
   public async delete(query: any): Promise<ITransactionRefDocument | null> {
-    return await db.transactionRefs.delete(
+    return await db.transactionRef.delete(
       {
           where: query,
       }

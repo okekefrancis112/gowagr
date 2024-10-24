@@ -65,7 +65,7 @@ CREATE TABLE "transactions" (
     "senderId" TEXT NOT NULL,
     "receiverId" TEXT NOT NULL,
     "paymentId" TEXT NOT NULL,
-    "remarks" TEXT NOT NULL,
+    "note" TEXT NOT NULL,
     "isPaid" BOOLEAN NOT NULL,
 
     CONSTRAINT "transactions_pkey" PRIMARY KEY ("id")

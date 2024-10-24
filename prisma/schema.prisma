@@ -50,10 +50,11 @@ model User {
   updatedAt                 DateTime       @updatedAt
   sentTransactions          Transaction[]  @relation("Sender")
   receivedTransactions      Transaction[]  @relation("Receiver")
+  userTransactions      Transaction[]  @relation("User")
   payments                  Payment[]
   notifications             Notification[]
   wallets                   Wallet[]
-  trsnsactionrefs           TransactionRefs[]
+  trsnsactionrefs           TransactionRef[]
 
   @@index([username, email])
   @@map(name: "users")
@@ -89,13 +90,22 @@ model Transaction {
   id              String  @id @unique @default(uuid())
   currency        String?
   amount          Decimal @default(0)
+  userId        String?
+  user          User?    @relation("User", fields: [userId], references: [id], onDelete: Cascade)
   senderId        String?
   sender          User?    @relation("Sender", fields: [senderId], references: [id], onDelete: Cascade)
   receiverId      String?
   receiver        User?    @relation("Receiver", fields: [receiverId], references: [id], onDelete: Cascade)
   paymentId       String?
   payment         Payment? @relation("PaymentType", fields: [paymentId], references: [id], onDelete: Cascade)
-  remarks         String
+  transactionRefId       String
+  transactionRef     TransactionRef   ? @relation("transactionRef", fields: [transactionRefId], references: [id], onDelete: Cascade)
+  note         String?
+  transactionHash         String?
+  paymentReference         String?
+  description         String
+  transactionStatus String
+  transactionType String
   isPaid          Boolean @default(false)
 
   @@map("transactions")
@@ -143,7 +153,7 @@ model Wallet {
   @@map(name: "wallets")
 }
 
-model TransactionRefs {
+model TransactionRef {
   id         String    @id @unique @default(uuid())
   transactionHash     String?
   amount     Decimal?
@@ -151,6 +161,7 @@ model TransactionRefs {
   user       User?     @relation(fields: [userId], references: [id])
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  transactions  Transaction[] @relation("transactionRef")
 
   @@map(name: "transactionrefs")
 }

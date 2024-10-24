@@ -4,33 +4,53 @@ class TransactionRepository {
     // Create Transaction
     // This function creates a new Transaction with the given data
     public async create({
+        userId,
+        transactionHash,
         currency,
         amount,
+        transactionRefId,
+        description,
         senderId,
         receiverId,
         paymentId,
-        remarks,
+        note,
         isPaid,
+        transactionStatus,
+        paymentReference,
+        transactionType,
     }: {
         currency: string;
+        userId: string;
+        transactionHash?: string;
         amount: number;
         senderId?: string;
         receiverId?: string;
         paymentId?: string;
-        remarks?: string;
+        note?: string;
+        paymentReference?: string;
         isPaid?: boolean;
+        description: string;
+        transactionRefId: string;
+        transactionStatus: string;
+        transactionType: string;
     }): Promise<ITransactionDocument> {
-
         // Save the Transaction to the database
         return await db.transaction.create({
             data:{
+                userId,
                 currency,
                 amount,
                 senderId,
                 receiverId,
                 paymentId,
-                remarks,
+                transactionHash,
+                note,
                 isPaid,
+                transactionRefId,
+                transactionStatus,
+                description,
+                paymentReference,
+                transactionType,
             }
         }) as any;
     }

@@ -4,25 +4,27 @@ import transactionRepository from "../repositories/transaction.repository";
 import userRepository from "../repositories/user.repository";
 import walletRepository from "../repositories/wallet.repository";
 import transactionRefRepository from "../repositories/transactionRef.repository";
+import { ICurrency, ITransactionStatus, ITransactionType } from "../interfaces/transaction.interface";
 
 interface IWalletCredit {
     userId: string;
     amount: number;
-    currency?: string;
+    currency: ICurrency;
     userCurrency?: string;
     senderId?: string;
     receiverId?: string;
     paymentId?: string;
-    remarks?: string;
+    note?: string;
     transactionHash?: string;
     isPaid?: boolean;
     reference?: string;
     isActive?: boolean;
     user?: string;
+    description: string;
 }
 
 // Credit Wallet
-export const creditWallet = async ({ data, session }: { data: IWalletCredit; session: any }) => {
+export const creditWallet = async ({ data }: { data: IWalletCredit; session: any }) => {
     try {
         const {
             userId,
@@ -30,12 +32,12 @@ export const creditWallet = async ({ data, session }: { data: IWalletCredit; ses
             currency,
             transactionHash,
             reference,
-            userCurrency,
-            senderId,
-            receiverId,
-            paymentId,
-            remarks,
-            isPaid,
+            // senderId,
+            // receiverId,
+            // paymentId,
+            // isPaid,
+            note,
+            description,
         } = data;
 
         // Check if Wallet exist
@@ -69,14 +71,13 @@ export const creditWallet = async ({ data, session }: { data: IWalletCredit; ses
             amount,
             transactionHash,
             userId,
-            transactionRef: transactionRef.id,
+            transactionRefId: transactionRef.id,
             paymentReference: reference,
-            transaction_type: ITransactionType.CREDIT,
+            transactionType: ITransactionType.CREDIT,
             description,
             note,
             currency,
-            transaction_status: ITransactionStatus.SUCCESSFUL,
-            wallet_transaction_type,
+            transactionStatus: ITransactionStatus.SUCCESSFUL,
         });
 
         const updateUser = await userRepository.atomicUpdate(
@@ -110,23 +111,20 @@ interface IWalletDebit {
     transactionHash: string;
     reference: string;
     data?: any;
-    payment_gateway: IPaymentGateway;
     description?: string;
     currency: ICurrency;
     exchange_rate_value?: number;
     exchange_rate_currency?: string;
     ip_address?: string;
     note?: string;
-    transaction_to: ITransactionTo;
     transaction_type: ITransactionType;
-    wallet_transaction_type: IWalletTransactionType;
     destination_currency?: ICurrency;
     source_currency?: ICurrency;
     createdAt?: Date;
 }
 
 // Debit Wallet
-export const debitWallet = async ({ data, session }: { data: IWalletDebit; session: any }) => {
+export const debitWallet = async ({ data }: { data: IWalletDebit; session: any }) => {
     try {
         const {
             userId,
@@ -135,16 +133,13 @@ export const debitWallet = async ({ data, session }: { data: IWalletDebit; sessi
             destination_amount,
             transactionHash,
             reference,
-            payment_gateway,
             description,
             currency,
             exchange_rate_value,
             exchange_rate_currency,
             ip_address,
             note,
-            transaction_to,
             transaction_type,
-            wallet_transaction_type,
             destination_currency,
             source_currency,
             createdAt,
@@ -217,7 +212,6 @@ export const debitWallet = async ({ data, session }: { data: IWalletDebit; sessi
             source_amount,
             destination_amount,
             createdAt: createdAt && createdAt,
-            session,
         });
 
         return {

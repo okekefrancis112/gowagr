@@ -7,12 +7,10 @@ import ResponseHandler from './util/response-handler';
 import Logger from './util/logger';
 import { Namespaces } from './constants/namespace.constant';
 import { IUserDocument } from './interfaces/user.interface';
-import { IAdminUserDocument } from './interfaces/adminUser.interface';
 import { HTTP_CODES } from './constants/app_defaults.constant';
 
 export interface ExpressRequest extends Request {
   user?: IUserDocument;
-  admin_user?: IAdminUserDocument;
 }
 
 export interface ExpressResponse extends Response {

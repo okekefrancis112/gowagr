@@ -30,7 +30,7 @@ const router = express.Router();
 router.post(
   '/register-mobile',
   UserValidations.validateCreateUserMobile,
-  userControllers.RegisterMobile
+  userControllers.Register
 );
 
 // Login an existing user
@@ -60,11 +60,7 @@ router.post('/reset', UserValidations.validateResetPassword, userControllers.res
 router.get('/', auth.auth, userControllers.getUserDetails);
 router.get('/users', auth.auth, userControllers.getUsers);
 router.get('/search', auth.auth, userControllers.searchUsers);
-router.get('/tags', userControllers.getTags);
-
 router.post('/upload', auth.auth, upload.single('file'), userControllers.uploadProfileImage);
-router.get('/uploads/:filename',auth.auth, userControllers.getProfileImage);
-
 
 // Export router
 export default router;

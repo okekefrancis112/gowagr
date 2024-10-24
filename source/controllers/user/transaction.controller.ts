@@ -11,50 +11,50 @@ import { Response } from "express";
  * Create Transactions
  *
  */
-export async function createTransaction(
-    req: ExpressRequest,
-    res: Response,
-): Promise<Response | void> {
-    const user = throwIfUndefined(req.user, 'req.user');
+// export async function createTransaction(
+//     req: ExpressRequest,
+//     res: Response,
+// ): Promise<Response | void> {
+//     const user = throwIfUndefined(req.user, 'req.user');
 
-    const {
-        currency,
-        amount,
-        receiverId,
-        paymentId,
-        remarks,
-        isPaid,
-    } = req.body;
+//     const {
+//         currency,
+//         amount,
+//         receiverId,
+//         paymentId,
+//         note,
+//         isPaid,
+//     } = req.body;
 
-    try{
-        // Start a Prisma transaction
-        await db.$transaction(async () => {
-            const Transaction = await transactionRepository.create({
-                currency,
-                amount,
-                senderId: String(user.id),
-                receiverId: String(receiverId),
-                paymentId: String(paymentId),
-                remarks,
-                isPaid,
-            });
+//     try{
+//         // Start a Prisma transaction
+//         await db.$transaction(async () => {
+//             const Transaction = await transactionRepository.create({
+//                 currency,
+//                 amount,
+//                 senderId: String(user.id),
+//                 receiverId: String(receiverId),
+//                 paymentId: String(paymentId),
+//                 note,
+//                 isPaid,
+//             });
 
-            // return success response after successful user creation
-            return ResponseHandler.sendSuccessResponse({
-                message: `Transaction created successfully`,
-                code: HTTP_CODES.CREATED,
-                res,
-                data: Transaction
-            });
-        });
-    } catch(error) {
-        return ResponseHandler.sendErrorResponse({
-            res,
-            code: HTTP_CODES.INTERNAL_SERVER_ERROR,
-            error: `${error}`,
-        });
-    }
-}
+//             // return success response after successful user creation
+//             return ResponseHandler.sendSuccessResponse({
+//                 message: `Transaction created successfully`,
+//                 code: HTTP_CODES.CREATED,
+//                 res,
+//                 data: Transaction
+//             });
+//         });
+//     } catch(error) {
+//         return ResponseHandler.sendErrorResponse({
+//             res,
+//             code: HTTP_CODES.INTERNAL_SERVER_ERROR,
+//             error: `${error}`,
+//         });
+//     }
+// }
 
 /***
  *
@@ -123,52 +123,52 @@ export async function getTransaction(
  * Edit Transactions
  *
  */
-export async function editTransaction(
-    req: ExpressRequest,
-    res: Response,
-): Promise<Response | void> {
-    const user = throwIfUndefined(req.user, 'req.user');
+// export async function editTransaction(
+//     req: ExpressRequest,
+//     res: Response,
+// ): Promise<Response | void> {
+//     const user = throwIfUndefined(req.user, 'req.user');
 
-    const {
-        currency,
-        userCurrency,
-        usdExchangeRate,
-        amount,
-        receiverId,
-        paymentId,
-        remarks,
-        isPaid,
-    } = req.body;
+//     const {
+//         currency,
+//         userCurrency,
+//         usdExchangeRate,
+//         amount,
+//         receiverId,
+//         paymentId,
+//         note,
+//         isPaid,
+//     } = req.body;
 
-    try{
+//     try{
 
-        const Transaction = await transactionRepository.atomicUpdate(
-            { id: String(req.params.transaction_id) },
-            {
-                currency,
-                userCurrency,
-                usdExchangeRate,
-                amount,
-                receiverId,
-                paymentId,
-                remarks,
-                isPaid,
-            }
-        );
+//         const Transaction = await transactionRepository.atomicUpdate(
+//             { id: String(req.params.transaction_id) },
+//             {
+//                 currency,
+//                 userCurrency,
+//                 usdExchangeRate,
+//                 amount,
+//                 receiverId,
+//                 paymentId,
+//                 note,
+//                 isPaid,
+//             }
+//         );
 
-        // return success response after successful user creation
-        return ResponseHandler.sendSuccessResponse({
-            message: `Transaction edited successfully`,
-            code: HTTP_CODES.CREATED,
-            res,
-            data: Transaction
-        });
+//         // return success response after successful user creation
+//         return ResponseHandler.sendSuccessResponse({
+//             message: `Transaction edited successfully`,
+//             code: HTTP_CODES.CREATED,
+//             res,
+//             data: Transaction
+//         });
 
-    } catch(error) {
-        return ResponseHandler.sendErrorResponse({
-            res,
-            code: HTTP_CODES.INTERNAL_SERVER_ERROR,
-            error: `${error}`,
-        });
-    }
-}
+//     } catch(error) {
+//         return ResponseHandler.sendErrorResponse({
+//             res,
+//             code: HTTP_CODES.INTERNAL_SERVER_ERROR,
+//             error: `${error}`,
+//         });
+//     }
+// }

@@ -25,7 +25,7 @@ Make sure you have the following software installed on your machine:
 1. Clone the repository:
 
     ```bash
-    git clone git@gitlab.com:fansincdev/Transactly-backend.git
+    git clone git@github.com:okekefrancis112/gowagr.git
     cd Transactly
     ```
 

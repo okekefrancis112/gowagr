@@ -54,7 +54,7 @@ describe('User Controller', () => {
 
             (userRepository.getOne as jest.Mock).mockResolvedValue({});
 
-            await userController.RegisterMobile(req as ExpressRequest, res as Response);
+            await userController.Register(req as ExpressRequest, res as Response);
 
             expect(ResponseHandler.sendErrorResponse).toHaveBeenCalledWith({
                 res,
@@ -75,7 +75,7 @@ describe('User Controller', () => {
                 dob: new Date(),
             };
 
-            await userController.RegisterMobile(req as ExpressRequest, res as Response);
+            await userController.Register(req as ExpressRequest, res as Response);
 
             expect(ResponseHandler.sendErrorResponse).toHaveBeenCalledWith({
                 res,
@@ -102,7 +102,7 @@ describe('User Controller', () => {
             (userRepository.create as jest.Mock).mockResolvedValue({ id: 'userId' });
             (UtilFunctions.generateOtp as jest.Mock).mockResolvedValue({ otp: '123456' });
 
-            await userController.RegisterMobile(req as ExpressRequest, res as Response);
+            await userController.Register(req as ExpressRequest, res as Response);
 
             expect(userRepository.create).toHaveBeenCalledWith({
                 fullname: 'John Doe',
@@ -136,7 +136,7 @@ describe('User Controller', () => {
 
             (userRepository.getOne as jest.Mock).mockRejectedValue(new Error('Internal Server Error'));
 
-            await userController.RegisterMobile(req as ExpressRequest, res as Response);
+            await userController.Register(req as ExpressRequest, res as Response);
 
             expect(ResponseHandler.sendErrorResponse).toHaveBeenCalledWith({
                 res,

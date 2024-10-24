@@ -12,6 +12,9 @@ import { Types } from 'aws-sdk/clients/acm';
 import { env } from 'process';
 import otpRepository from '../../repositories/otp.repository';
 import { NotificationTaskJob } from '../../services/queues/producer.service';
+import { debitWallet, creditWallet } from '../../helpers/wallet.helper';
+import { ICurrency, ITransactionType } from '../../interfaces/transaction.interface';
+import transactionRepository from '../../repositories/transaction.repository';
 
 /****
  *
@@ -302,7 +305,7 @@ export async function verifyWalletTransfer(
       }
 
       const reference = UtilFunctions.generateTXRef();
-      const transaction_hash = UtilFunctions.generateTXHash();
+      const transactionHash = UtilFunctions.generateTXHash();
 
       // get reciever
       const receiverWallet = await walletRepository.getOne({
@@ -332,38 +335,32 @@ export async function verifyWalletTransfer(
 
       const debitPayload = {
           amount: amount,
-          user_id: new Types.ObjectId(sender_wallet?.user_id),
-          sender: new Types.ObjectId(sender_wallet?.user_id),
+          userId: sender_wallet?.userId,
+          sender: sender_wallet?.userId,
           recipient: wallet?.userId,
-          currency: IC,
+          currency: ICurrency.NGN,
           note: note,
-          payment_gateway: IPaymentGateway.WALLET,
           reference,
-          transaction_hash,
-          transaction_to: ITransactionTo.WALLET,
+          transactionHash,
           transaction_type: ITransactionType.DEBIT,
-          wallet_transaction_type: IWalletTransactionType.SEND_TO_FRIEND,
-          description: `Transfer to ${receiverUser.first_name} ${receiverUser.last_name}`,
+          description: `Transfer to ${receiverUser.fullname}`,
       };
 
       const creditPayload = {
           amount: amount,
-          user_id: new Types.ObjectId(wallet?.user_id),
-          sender: sender_wallet?.user_id,
-          recipient: wallet?.user_id,
+          userId: wallet?.userId,
+          sender: sender_wallet?.userId,
+          recipient: wallet?.userId,
           currency: ICurrency.USD,
-          payment_gateway: IPaymentGateway.WALLET,
           note: note,
           reference,
-          transaction_hash,
-          transaction_to: ITransactionTo.WALLET,
-          wallet_transaction_type: IWalletTransactionType.RECEIVE_FROM_FRIEND,
-          description: `Transfer from ${senderUser.first_name} ${senderUser.last_name}`,
+          transactionHash,
+          description: `Transfer from ${senderUser.fullname}`,
       };
 
       const result = await Promise.all([
-          debitWallet({ data: debitPayload, session }),
-          creditWallet({ data: creditPayload, session }),
+          debitWallet({ data: debitPayload }),
+          creditWallet({ data: creditPayload }),
       ]);
 
       const failedTxns = result.filter((r:any) => r.success !== true);
@@ -464,17 +461,17 @@ export async function getUserWallet(
           });
       }
 
-      const transactions = await transactionRepository.findPaginatedWalletTransactions(
-        req,
-        getUser.id
-      );
+      // const transactions = await transactionRepository.findPaginatedWalletTransactions(
+      //   req,
+      //   getUser.id
+      // );
 
       return ResponseHandler.sendSuccessResponse({
           res,
           code: HTTP_CODES.OK,
           message: "User wallet details fetched",
           data: {
-              transactions,
+              // transactions,
               userInfo: {
                   name: `${getUser?.fullname}`,
                   image: getUser?.image ? getUser?.image : "",
